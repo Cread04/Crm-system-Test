@@ -4,5 +4,5 @@ public enum IssueState
 {
     NEW = 0,
     OPEN = 1, 
-    CLOSED = 2 
+    CLOSED = 2,
 }

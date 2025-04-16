@@ -12,19 +12,21 @@ export default function EmployeeView() {
         if (response.ok) {
             setEmployees(result.employees)
         } else {
-            alert("No employes found.")
+            alert("No employees found.")
         }
     }
 
     useEffect(() => {
         getEmployees()
-    }, [user])
+    }, []) 
 
-    return <div className="employeeView">
-        <h1>Employees</h1>
-        <div id="employeeViewMenu">
-            <NavLink to="new"><button>Add Employee</button></NavLink>
+    return (
+        <div className="employeeView">
+            <h1>Employees</h1>
+            <div id="employeeViewMenu">
+                <NavLink to="new"><button>Add Employee</button></NavLink>
+            </div>
+            <EmployeeList employeeList={employees} getEmployees={getEmployees} />
         </div>
-        <EmployeeList employeeList={employees} getEmployees={getEmployees} />
-    </div>
+    )
 }

@@ -7,7 +7,7 @@ using server.Records;
 
 namespace server.api;
 
-public class Login
+public class  Login
 {
     private NpgsqlDataSource Db;
     public Login(WebApplication app, NpgsqlDataSource db, string url)
