@@ -28,7 +28,7 @@ public class Xunit_test
         [Fact]
         public void CreateIssue_WithEmptyTitle_ShouldFailValidation()
         {
-            // Arrange
+            // Setup
             var issue = new Issue(
                 id: Guid.NewGuid(),
                 companyName: "Testbolag",
@@ -57,7 +57,7 @@ public class Xunit_test
             var validSenders = new[] {"CUSTOMER", "SUPPORT"};
             var message = new Message("Hej, Jag har fått problem.", "CUSTOMER", "testuser", DateTime.Now);
             
-            //Agerande
+            //Act
             var isValidSender = validSenders.Contains(message.Sender.ToUpper());
             
             //Assert
