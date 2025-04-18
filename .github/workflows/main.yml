@@ -19,7 +19,6 @@ jobs:
 
     - name: Install Playwright packages
       run: |
-        # Install the latest stable versions that work together
         dotnet add Playwright/Playwright.csproj package Microsoft.Playwright.NUnit
         dotnet add Playwright/Playwright.csproj package Microsoft.Playwright
         dotnet tool install --global Microsoft.Playwright.CLI
@@ -49,7 +48,8 @@ jobs:
        libxext6 \
        libxfixes3 \
        libxkbcommon0 \
-       libxrandr2
+       libxrandr2 \
+       xvfb
 
     - name: Install browsers
       run: |
@@ -67,9 +67,7 @@ jobs:
       run: echo "HEADLESS=true" >> $GITHUB_ENV
 
     - name: Run Playwright tests
-      run: |
-        cd Playwright
-        dotnet test --no-build --verbosity normal
+      run: xvfb-run --auto-servernum dotnet test Playwright --no-build --verbosity normal
 
     - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
