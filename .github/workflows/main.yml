@@ -38,7 +38,10 @@ jobs:
           libxrandr2
       
     - name: Install project dependencies
-      run: dotnet restore
+      run: |
+        dotnet restore
+        # Add required EF Core design package
+        dotnet add Server package Microsoft.EntityFrameworkCore.Design
       
     - name: Build projects
       run: |
@@ -51,7 +54,7 @@ jobs:
         cd server
         dotnet tool install --global dotnet-ef
         export PATH="$PATH:$HOME/.dotnet/tools"
-        dotnet ef database update
+        dotnet ef database update --project ../Server --startup-project ../Server
         # Alternative if you have a seed script:
         # dotnet run --project ../Server --seed
     
