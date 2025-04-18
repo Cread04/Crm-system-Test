@@ -45,18 +45,31 @@ jobs:
         cd Playwright
         dotnet build
     
-    # Install Playwright browsers
-    - name: Install Playwright browsers
+    # Robust Playwright installation
+    - name: Install Playwright
       run: |
-        cd Playwright
+        # Install the package
+        dotnet add Playwright package Microsoft.Playwright
+        
+        # Install CLI tool
         dotnet tool install --global Microsoft.Playwright.CLI
+        
+        # Add dotnet tools to PATH (critical fix)
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
         export PATH="$PATH:$HOME/.dotnet/tools"
-        dotnet playwright install --with-deps chromium
+        
+        # Verify installation
+        echo "PATH contains dotnet tools:"
+        echo "$PATH" | grep -i ".dotnet/tools"
+        
+        # Install browsers using direct playwright command
+        cd Playwright
+        playwright install --with-deps chromium
     
-    # Start services
+    # Start services with proper waiting
     - name: Start server
       run: |
-        cd Server
+        cd server
         nohup dotnet run > server.log 2>&1 &
         echo "Server started"
     
@@ -67,19 +80,18 @@ jobs:
         
     - name: Start client and wait
       run: |
-        cd Client
+        cd client
         npm install
         nohup npm run dev > client.log 2>&1 &
-        echo "Waiting for client to be ready..."
+        echo "Waiting for client..."
         timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; done'
-        echo "Client ready"
-      
+    
     # Run tests
     - name: Run Playwright tests
       run: |
         cd Playwright
-        dotnet test --filter "FullyQualifiedName~Playwright"
-      
+        dotnet test
+    
     - name: Run unit tests
       run: dotnet test Xunit/
       
