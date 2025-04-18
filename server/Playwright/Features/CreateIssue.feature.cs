@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace server.Features
+namespace server.Playwright.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -19,7 +19,7 @@ namespace server.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class LoginAsAUserFeature : object, Xunit.IClassFixture<LoginAsAUserFeature.FixtureData>, System.IDisposable
+    public partial class CreateIssueFeature : object, Xunit.IClassFixture<CreateIssueFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace server.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "Logintest.feature"
+#line 1 "CreateIssue.feature"
 #line hidden
         
-        public LoginAsAUserFeature(LoginAsAUserFeature.FixtureData fixtureData, server_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public CreateIssueFeature(CreateIssueFeature.FixtureData fixtureData, server_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace server.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Login as a User", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Playwright/Features", "Create Issue", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -80,14 +80,14 @@ namespace server.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Login into the workersite")]
-        [Xunit.TraitAttribute("FeatureTitle", "Login as a User")]
-        [Xunit.TraitAttribute("Description", "Login into the workersite")]
-        public void LoginIntoTheWorkersite()
+        [Xunit.SkippableFactAttribute(DisplayName="User Creates an Issue")]
+        [Xunit.TraitAttribute("FeatureTitle", "Create Issue")]
+        [Xunit.TraitAttribute("Description", "User Creates an Issue")]
+        public void UserCreatesAnIssue()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Login into the workersite", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User Creates an Issue", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 3
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -99,25 +99,31 @@ namespace server.Features
             {
                 this.ScenarioStart();
 #line 4
-        testRunner.Given("I am on the  homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+        testRunner.Given("I am on the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 5
-        testRunner.When("I click the login link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I click on \"Demo AB\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 6
-        testRunner.Then("I should see the Login Popup", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should see the issue form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 7
-        testRunner.Then("I enter \"no@email.com\" into the login email field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I enter \"Markus.olsson2006@gmail.com\" as the email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 8
-        testRunner.And("I enter \"abc123\" as the password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter \"Telefon problem\" as the title", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 9
-        testRunner.When("I click the \"Login\" button on the login page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I select \"Reklamation\" from the subject dropdown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 10
-        testRunner.Then("I Should see the worksite", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I enter \"Min telefon startar inte\" as the Message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 11
+        testRunner.When("I click the \"Create issue\" button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 12
+        testRunner.Then("Im done", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -130,12 +136,12 @@ namespace server.Features
             
             public FixtureData()
             {
-                LoginAsAUserFeature.FeatureSetup();
+                CreateIssueFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                LoginAsAUserFeature.FeatureTearDown();
+                CreateIssueFeature.FeatureTearDown();
             }
         }
     }

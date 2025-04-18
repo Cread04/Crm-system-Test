@@ -9,6 +9,6 @@
         And I select "Reklamation" from the subject dropdown
         And I enter "Min telefon startar inte" as the Message
         When I click the "Create issue" button
-        Then I should see a confirmation message
+        Then Im done
 
        

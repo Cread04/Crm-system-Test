@@ -23,7 +23,7 @@ public class PlaywrightHooks
         _context = await _browser.NewContextAsync();
         _page = await _context.NewPageAsync();
 
-        // Dela sidan till andra steg
+        
         _scenarioContext["page"] = _page;
     }
 

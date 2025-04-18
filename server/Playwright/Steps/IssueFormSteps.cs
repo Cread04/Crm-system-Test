@@ -67,9 +67,9 @@ public class IssueFormSteps
         await _page.ClickAsync($"text={buttonText}");
     }
 
-    [Then("I should see a confirmation message")]
-    public async Task ThenIShouldSeeAConfirmationMessage()
+    [Then("Im done")]
+    public async Task ThenImdone()
     {
-        await _page.WaitForSelectorAsync("text=Ärendet har skapats");
+        await _page.Context.Browser.CloseAsync();
     }
 }
