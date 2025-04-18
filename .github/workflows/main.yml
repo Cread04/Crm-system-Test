@@ -45,7 +45,7 @@ jobs:
       
     - name: Build projects
       run: |
-        dotnet build Server
+        dotnet build server
         dotnet build Playwright
     
     # Install EF Core tools and migrate database
