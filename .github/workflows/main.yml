@@ -75,6 +75,14 @@ jobs:
         cd server
         nohup dotnet run > server.log 2>&1 &
         echo "Server started on port 5000"
+
+
+    - name: Initialize test database
+      run: |
+        cd Server
+        dotnet ef database update
+        # Or use your database initialization script
+        # dotnet run --seed
     
     - name: Setup Node.js for client
       uses: actions/setup-node@v3
