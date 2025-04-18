@@ -71,7 +71,7 @@ jobs:
     # Start server (.NET application)
     - name: Start server
       run: |
-        cd Server/
+        cd server/
         dotnet run &
         echo "Server starting..."
         sleep 10  # Give the server time to start
@@ -80,7 +80,7 @@ jobs:
     # Start client (Node.js application)
     - name: Install client dependencies and start
       run: |
-        cd Client/
+        cd client/
         npm install
         npm run dev &
         echo "Client starting..."
