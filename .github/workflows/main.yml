@@ -26,12 +26,18 @@ jobs:
     - name: Install Playwright CLI
       run: dotnet tool install --global Microsoft.Playwright.CLI
 
-    - name: Run Playwright tests
-      run: dotnet test Playwright/ --no-build --verbosity normal -- Playwright.LaunchOptions.Headless=true
+    
+    - name: Install Playwright browsers
+      run: |
+        cd Playwright
+        dotnet build
+        playwright install --with-deps
 
-
+    
     - name: Run Playwright tests
-      run: dotnet test Playwright/ --no-build --verbosity normal
+      run: |
+        cd Playwright
+        dotnet test --no-build --verbosity normal -- Playwright.LaunchOptions.Headless=true
 
     - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
