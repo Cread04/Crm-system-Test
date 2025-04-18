@@ -56,7 +56,7 @@ jobs:
         echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
         
         # Verify project file exists
-        if [ ! -f "server/Server.csproj" ]; then
+        if [ ! -f "server/server.csproj" ]; then
           echo "Error: server.csproj not found!"
           ls -la server/
           exit 1
