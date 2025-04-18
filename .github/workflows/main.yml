@@ -13,11 +13,6 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
 
-    - name: Verify Playwright browsers
-      run: |
-        ls -la playwright/
-        playwright install
-
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
