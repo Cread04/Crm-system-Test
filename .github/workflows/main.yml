@@ -25,15 +25,17 @@ jobs:
     - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
       
-    - name: Install Playwright
+    - name: Install Playwright CLI
       run: dotnet tool install --global Microsoft.Playwright.CLI
-      
+
     - name: Install Playwright browsers
       run: playwright install --with-deps
-
+      
     - name: Run Playwright tests
       run: dotnet test Playwright/ --no-build --verbosity normal
 
+    - name: Run unit tests
+      run: dotnet test Xunit/ --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
