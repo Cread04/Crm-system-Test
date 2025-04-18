@@ -32,9 +32,7 @@ jobs:
       run: playwright install --with-deps
 
     - name: Run Playwright tests
-      run: |
-        cd server
-        dotnet test --filter "FullyQualifiedName~Playwright" --no-build --verbosity normal
+      run: dotnet test server/server.csproj --filter "FullyQualifiedName~.Playwright." --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
