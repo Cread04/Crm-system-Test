@@ -33,9 +33,8 @@ jobs:
 
     - name: Run Playwright tests
       run: |
-               dotnet test server.csproj --filter "FullyQualifiedName~CreateIssue" --no-build --verbosity normal
-               dotnet test server.csproj --filter "FullyQualifiedName~Logintest" --no-build --verbosity normal
-               dotnet test server.csproj --filter "FullyQualifiedName~Registeracompany" --no-build --verbosity normal
+        cd server
+        dotnet test --filter "FullyQualifiedName~Playwright" --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
