@@ -41,25 +41,32 @@ jobs:
       run: |
         dotnet restore
         # Add required EF Core design package
-        dotnet add server package Microsoft.EntityFrameworkCore.Design
+        dotnet add Server/Server.csproj package Microsoft.EntityFrameworkCore.Design
       
     - name: Build projects
       run: |
-        dotnet build server
-        dotnet build Playwright
+        dotnet build server/Server.csproj
+        dotnet build Playwright/Playwright.csproj
     
-    # Install EF Core tools and migrate database
+    # Robust database setup
     - name: Setup database
       run: |
         # Install EF Core tools
         dotnet tool install --global dotnet-ef
         echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
         
-        # Run migrations from repository root
-        dotnet ef database update --project Server --startup-project Server
+        # Verify project file exists
+        if [ ! -f "Server/Server.csproj" ]; then
+          echo "Error: Server.csproj not found!"
+          ls -la Server/
+          exit 1
+        fi
         
-        # Alternative if you have a seed script:
-        # dotnet run --project Server -- seed
+        # Run migrations using explicit project file paths
+        dotnet ef database update --project Server/Server.csproj --startup-project Server/Server.csproj --verbose
+        
+        # Alternative if using DbContext directly
+        # dotnet exec --runtimeconfig Server/bin/Debug/net8.0/Server.runtimeconfig.json --depsfile Server/bin/Debug/net8.0/Server.deps.json ef database update
     
     # Install Playwright browsers
     - name: Install Playwright
@@ -92,7 +99,7 @@ jobs:
         dotnet test --logger "console;verbosity=detailed"
     
     - name: Run unit tests
-      run: dotnet test Xunit/
+      run: dotnet test Xunit/Xunit.csproj
       
     - name: Run Postman tests
       run: |
