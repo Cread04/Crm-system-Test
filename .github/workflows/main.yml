@@ -41,7 +41,7 @@ jobs:
       run: |
         dotnet restore
         # Add required EF Core design package
-        dotnet add Server package Microsoft.EntityFrameworkCore.Design
+        dotnet add server package Microsoft.EntityFrameworkCore.Design
       
     - name: Build projects
       run: |
