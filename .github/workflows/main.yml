@@ -42,13 +42,13 @@ jobs:
       
     - name: Build projects
       run: |
-        cd Server && dotnet build
+        cd server && dotnet build
         cd ../Playwright && dotnet build
     
     # Install EF Core tools and migrate database
     - name: Setup database
       run: |
-        cd Server
+        cd server
         dotnet tool install --global dotnet-ef
         export PATH="$PATH:$HOME/.dotnet/tools"
         dotnet ef database update
