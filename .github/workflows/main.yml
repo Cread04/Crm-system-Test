@@ -41,11 +41,11 @@ jobs:
       run: |
         dotnet restore
         # Add required EF Core design package
-        dotnet add server/Server.csproj package Microsoft.EntityFrameworkCore.Design
+        dotnet add server/server.csproj package Microsoft.EntityFrameworkCore.Design
       
     - name: Build projects
       run: |
-        dotnet build server/Server.csproj
+        dotnet build server/server.csproj
         dotnet build Playwright/Playwright.csproj
     
     # Robust database setup
