@@ -23,6 +23,7 @@ public class IssueFormSteps
     public async Task WhenIClickOn(string companyName)
     {
         await _page.ClickAsync($"text={companyName}");
+        await _page.Locator("text=Demo AB").ClickAsync(new() { Timeout = 30000 });
     }
 
     [Then("I should see the issue form")]

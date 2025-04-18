@@ -20,7 +20,7 @@ public class PlaywrightHooks
     public async Task Setup()
     {
         _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        _browser = await _playwright.Chromium.LaunchAsync(new() { Headless = false, SlowMo = 250 });
+        _browser = await _playwright.Chromium.LaunchAsync(new() { Headless = true, SlowMo = 250 });
         _context = await _browser.NewContextAsync();
         _page = await _context.NewPageAsync();
 
