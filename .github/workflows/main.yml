@@ -43,36 +43,45 @@ jobs:
     - name: Build Playwright project
       run: cd Playwright && dotnet build
     
-    # Install Playwright
-    - name: Install Playwright browsers
+    # Robust Playwright installation
+    - name: Install Playwright
       run: |
+        # Install the package first
+        dotnet add Playwright package Microsoft.Playwright
+        
+        # Install CLI tool and ensure it's on PATH
         dotnet tool install --global Microsoft.Playwright.CLI
         echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+        
+        # Verify installation
+        echo "PATH: $PATH"
+        dotnet tool list -g
+        ls -la "$HOME/.dotnet/tools"
+        
+        # Install browsers using direct npx call
         cd Playwright
-        dotnet playwright install --with-deps chromium
+        npx playwright install --with-deps chromium
     
-    # Start server with proper port
+    # Start services with proper waiting
     - name: Start server
       run: |
         cd Server
-        nohup dotnet run --urls "http://localhost:5000;https://localhost:5001" > server.log 2>&1 &
+        nohup dotnet run > server.log 2>&1 &
         echo "Server starting..."
-    
-    # Start client with proper port and wait
+        
     - name: Start client
       run: |
         cd Client
         npm install
-        nohup npm run dev -- --port 5173 > client.log 2>&1 &
-        echo "Waiting for client to be ready..."
-        timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; echo "Waiting..."; done'
-        echo "Client ready!"
+        nohup npm run dev > client.log 2>&1 &
+        echo "Waiting for client..."
+        timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; done'
     
-    # Run tests with proper base URL
+    # Run tests
     - name: Run Playwright tests
       run: |
         cd Playwright
-        dotnet test --filter "FullyQualifiedName~Playwright" -- TestRunParameters.Parameter(name:\"BaseUrl\",value:\"http://localhost:5173\")
+        dotnet test -- TestRunParameters.Parameter(name:"BaseUrl",value:"http://localhost:5173")
     
     - name: Run unit tests
       run: dotnet test Xunit/
