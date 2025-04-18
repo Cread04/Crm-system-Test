@@ -43,23 +43,29 @@ jobs:
     - name: Build Playwright project
       run: cd Playwright && dotnet build
     
-    # Proper Playwright installation with PATH configuration
-    - name: Install Playwright
+    # Robust Playwright installation
+    - name: Install Playwright and browsers
       run: |
-        # Add .NET tools to PATH
-        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-        
-        # Install Playwright packages
+        # Install packages
         dotnet add Playwright package Microsoft.Playwright
         dotnet tool install --global Microsoft.Playwright.CLI
         
-        # Verify installation
-        dotnet tool list -g
-        which playwright || echo "Playwright not in PATH"
+        # Add .NET tools to PATH
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
         
-        # Install browsers using npx as fallback
+        # Install browsers using all possible methods
         cd Playwright
-        dotnet playwright install --with-deps chromium || npx playwright install --with-deps chromium
+        dotnet build
+        
+        # Method 1: Try .NET CLI
+        dotnet playwright install --with-deps chromium || \
+        # Method 2: Try PowerShell script
+        pwsh bin/Debug/net8.0/playwright.ps1 install || \
+        # Method 3: Try npx fallback
+        npx playwright install --with-deps chromium
+        
+        # Verify installation
+        ls -la ~/.cache/ms-playwright/chromium-*/
     
     # Start services
     - name: Start server
