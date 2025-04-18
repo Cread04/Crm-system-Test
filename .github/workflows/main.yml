@@ -17,68 +17,60 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     
-    # Install system dependencies first
-    - name: Install required libraries
+    # Minimal required dependencies for Ubuntu 24.04
+    - name: Install essential libraries
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          libasound2t64 \  # New name for libasound2
+          libnss3 \
+          libnspr4 \
           libatk1.0-0 \
           libatk-bridge2.0-0 \
           libcups2 \
           libdrm2 \
-          libgbm1 \
-          libnspr4 \
-          libnss3 \
-          libx11-6 \
+          libxkbcommon0 \
           libxcomposite1 \
           libxdamage1 \
-          libxext6 \
           libxfixes3 \
-          libxrandr2
+          libxrandr2 \
+          libgbm1 \
+          libasound2t64  # New package name for libasound2
       
     - name: Install dotnet project dependencies
       run: dotnet restore
       
-    - name: Build/Restore Playwright Project
+    - name: Build Playwright Project
       run: cd Playwright && dotnet build
     
-    # Install Playwright and browsers
-    - name: Install Playwright
+    # Robust Playwright installation
+    - name: Setup Playwright
       run: |
         dotnet tool install --global Microsoft.Playwright.CLI
-        cd Playwright && playwright install --with-deps
+        cd Playwright
+        npx playwright install --with-deps chromium  # Install only Chromium
+        playwright install-deps  # Install missing system dependencies
     
-    # Start server (.NET application)
+    # Start server
     - name: Start server
       run: cd Server && nohup dotnet run &
     
-    # Start client (Node.js application)
+    # Start client
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
         
-    - name: Install client dependencies and start
+    - name: Start client
       run: cd Client && npm install && nohup npm run dev &
       
-    # Wait for services to start
-    - name: Wait for services to be ready
-      run: |
-        echo "Waiting for services to start..."
-        sleep 15
+    - name: Wait for services
+      run: sleep 15
       
-    # Run Playwright tests
     - name: Run Playwright tests
       run: cd Playwright && dotnet test
       
-    # Run unit tests
     - name: Run unit tests
-      run: dotnet test Xunit/ --no-build --verbosity normal
-      
-    # Setup and run Postman tests
-    - name: Install Newman
-      run: npm install -g newman
+      run: dotnet test Xunit/
       
     - name: Run Postman tests
-      run: newman run Postman/CRM-Testning.postman_collection
+      run: npm install -g newman && newman run Postman/CRM-Testning.postman_collection
