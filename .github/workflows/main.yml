@@ -17,7 +17,7 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     
-    # Install system dependencies (Ubuntu 24.04 compatible)
+    # Install system dependencies
     - name: Install required libraries
       run: |
         sudo apt-get update
@@ -40,69 +40,50 @@ jobs:
     - name: Install project dependencies
       run: dotnet restore
       
-    - name: Build Playwright project
+    - name: Build projects
       run: |
-        cd Playwright
-        dotnet build
+        cd Server && dotnet build
+        cd ../Playwright && dotnet build
     
-    # Robust Playwright browser installation
-    - name: Install Playwright browsers
+    # Install EF Core tools and migrate database
+    - name: Setup database
       run: |
-        # Clean any previous installation
-        rm -rf ~/.cache/ms-playwright
-        
-        # Install using all available methods
+        cd Server
+        dotnet tool install --global dotnet-ef
+        export PATH="$PATH:$HOME/.dotnet/tools"
+        dotnet ef database update
+        # Alternative if you have a seed script:
+        # dotnet run --project ../Server --seed
+    
+    # Install Playwright browsers
+    - name: Install Playwright
+      run: |
         cd Playwright
-        
-        # Method 1: Try .NET CLI
         dotnet tool install --global Microsoft.Playwright.CLI
         export PATH="$PATH:$HOME/.dotnet/tools"
-        dotnet playwright install --with-deps chromium || \
-        
-        # Method 2: Try PowerShell script
-        pwsh bin/Debug/net8.0/playwright.ps1 install || \
-        
-        # Method 3: Try npx fallback
-        npx playwright install --with-deps chromium
-        
-        # Verify installation
-        ls -la ~/.cache/ms-playwright/chromium-*/
-        playwright --version
+        dotnet playwright install --with-deps chromium
     
-    # Start services with proper waiting
+    # Start services
     - name: Start server
       run: |
         cd server
         nohup dotnet run > server.log 2>&1 &
-        echo "Server started on port 5000"
-
-
-    - name: Initialize test database
-      run: |
-        cd server
-        dotnet ef database update
-        # Or use your database initialization script
-        # dotnet run --seed
+        echo "Waiting for server..."
+        timeout 30 bash -c 'until curl -s http://localhost:5000/api/health >/dev/null; do sleep 1; done'
     
-    - name: Setup Node.js for client
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        
-    - name: Start client and wait
+    - name: Start client
       run: |
         cd client
         npm install
         nohup npm run dev > client.log 2>&1 &
-        echo "Waiting for client on port 5173..."
-        timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; echo "Waiting for client..."; done'
-        echo "Client ready"
+        echo "Waiting for client..."
+        timeout 30 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; done'
     
-    # Run tests with retries
+    # Run tests
     - name: Run Playwright tests
       run: |
         cd Playwright
-        dotnet test --logger "console;verbosity=detailed" --blame
+        dotnet test --logger "console;verbosity=detailed"
     
     - name: Run unit tests
       run: dotnet test Xunit/
