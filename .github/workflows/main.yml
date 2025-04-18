@@ -15,7 +15,7 @@ jobs:
 
     - name: Verify Playwright browsers
       run: |
-        ls -la /ms-playwright/
+        ls -la playwright/
         playwright install
 
     - name: Set up .NET
