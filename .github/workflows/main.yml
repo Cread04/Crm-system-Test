@@ -51,7 +51,6 @@ jobs:
        libxkbcommon0 \
        libxrandr2
 
-
     - name: Install browsers
       run: |
         cd Playwright
@@ -63,6 +62,9 @@ jobs:
         ls -la ~/.cache/ms-playwright/
         playwright --version
         dotnet tool list -g
+
+    - name: Set HEADLESS environment variable
+      run: echo "HEADLESS=true" >> $GITHUB_ENV
 
     - name: Run Playwright tests
       run: |
