@@ -31,12 +31,11 @@ jobs:
     - name: Install Playwright browsers
       run: playwright install --with-deps
 
-    - name: List files (debugging)
-      run: ls -R server/
-
-      
     - name: Run Playwright tests
-      run: dotnet test Playwright/Features/ --no-build --verbosity normal
+      run: |
+               dotnet test server.csproj --filter "FullyQualifiedName~CreateIssue" --no-build --verbosity normal
+               dotnet test server.csproj --filter "FullyQualifiedName~Logintest" --no-build --verbosity normal
+               dotnet test server.csproj --filter "FullyQualifiedName~Registeracompany" --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
