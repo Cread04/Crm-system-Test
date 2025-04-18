@@ -45,25 +45,28 @@ jobs:
       
     - name: Build projects
       run: |
-        cd server && dotnet build
-        cd ../Playwright && dotnet build
+        dotnet build Server
+        dotnet build Playwright
     
     # Install EF Core tools and migrate database
     - name: Setup database
       run: |
-        cd server
+        # Install EF Core tools
         dotnet tool install --global dotnet-ef
-        export PATH="$PATH:$HOME/.dotnet/tools"
-        dotnet ef database update --project ../Server --startup-project ../Server
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+        
+        # Run migrations from repository root
+        dotnet ef database update --project Server --startup-project Server
+        
         # Alternative if you have a seed script:
-        # dotnet run --project ../Server --seed
+        # dotnet run --project Server -- seed
     
     # Install Playwright browsers
     - name: Install Playwright
       run: |
-        cd Playwright
         dotnet tool install --global Microsoft.Playwright.CLI
-        export PATH="$PATH:$HOME/.dotnet/tools"
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+        cd Playwright
         dotnet playwright install --with-deps chromium
     
     # Start services
