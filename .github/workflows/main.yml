@@ -17,45 +17,44 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     
-    # Minimal required dependencies for Ubuntu 24.04
-    - name: Install essential libraries
+    # Install only essential, available dependencies
+    - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          libnss3 \
-          libnspr4 \
+          libasound2t64 \
           libatk1.0-0 \
           libatk-bridge2.0-0 \
           libcups2 \
           libdrm2 \
-          libxkbcommon0 \
+          libgbm1 \
+          libnspr4 \
+          libnss3 \
+          libx11-6 \
           libxcomposite1 \
           libxdamage1 \
+          libxext6 \
           libxfixes3 \
-          libxrandr2 \
-          libgbm1 \
-          libasound2t64  # New package name for libasound2
+          libxrandr2
       
-    - name: Install dotnet project dependencies
+    - name: Install project dependencies
       run: dotnet restore
       
-    - name: Build Playwright Project
+    - name: Build Playwright project
       run: cd Playwright && dotnet build
     
-    # Robust Playwright installation
-    - name: Setup Playwright
+    # Correct Playwright installation using .NET tool
+    - name: Install Playwright
       run: |
         dotnet tool install --global Microsoft.Playwright.CLI
         cd Playwright
-        npx playwright install --with-deps chromium  # Install only Chromium
-        playwright install-deps  # Install missing system dependencies
+        dotnet playwright install --with-deps chromium
     
-    # Start server
+    # Start services
     - name: Start server
       run: cd Server && nohup dotnet run &
     
-    # Start client
-    - name: Setup Node.js
+    - name: Setup Node.js for client
       uses: actions/setup-node@v3
       with:
         node-version: '18'
@@ -66,6 +65,7 @@ jobs:
     - name: Wait for services
       run: sleep 15
       
+    # Run tests
     - name: Run Playwright tests
       run: cd Playwright && dotnet test
       
