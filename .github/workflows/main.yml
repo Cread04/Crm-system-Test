@@ -17,8 +17,8 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     
-    # Install only essential, available dependencies
-    - name: Install system dependencies
+    # Install system dependencies (Ubuntu 24.04 compatible)
+    - name: Install required libraries
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -43,11 +43,12 @@ jobs:
     - name: Build Playwright project
       run: cd Playwright && dotnet build
     
-    # Correct Playwright installation using .NET tool
+    # Proper Playwright installation sequence
     - name: Install Playwright
       run: |
+        dotnet add Playwright package Microsoft.Playwright
         dotnet tool install --global Microsoft.Playwright.CLI
-        cd Playwright
+        export PATH="$PATH:$HOME/.dotnet/tools"
         dotnet playwright install --with-deps chromium
     
     # Start services
