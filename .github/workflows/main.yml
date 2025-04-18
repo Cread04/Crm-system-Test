@@ -17,11 +17,12 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Install exact Playwright version
+    - name: Install Playwright packages
       run: |
-        dotnet add Playwright/Playwright.csproj package Microsoft.Playwright.NUnit --version 1.44.0
-        dotnet add Playwright/Playwright.csproj package Microsoft.Playwright --version 1.44.0
-        dotnet tool install --global Microsoft.Playwright.CLI --version 1.44.0
+        # Install the latest stable versions that work together
+        dotnet add Playwright/Playwright.csproj package Microsoft.Playwright.NUnit
+        dotnet add Playwright/Playwright.csproj package Microsoft.Playwright
+        dotnet tool install --global Microsoft.Playwright.CLI
 
     - name: Install system dependencies
       run: |
@@ -54,12 +55,12 @@ jobs:
       run: |
         cd Playwright
         dotnet build
-        npx playwright install --with-deps chromium
+        playwright install --with-deps chromium
 
     - name: Verify installation
       run: |
         ls -la ~/.cache/ms-playwright/
-        npx playwright --version
+        playwright --version
         dotnet tool list -g
 
     - name: Run Playwright tests
