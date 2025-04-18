@@ -65,13 +65,13 @@ jobs:
     # Start services with proper waiting
     - name: Start server
       run: |
-        cd Server
+        cd server
         nohup dotnet run > server.log 2>&1 &
         echo "Server starting..."
         
     - name: Start client
       run: |
-        cd Client
+        cd client
         npm install
         nohup npm run dev > client.log 2>&1 &
         echo "Waiting for client..."
