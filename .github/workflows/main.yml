@@ -17,7 +17,7 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     
-    # Install system dependencies
+    # Install system dependencies (Ubuntu 24.04 compatible)
     - name: Install required libraries
       run: |
         sudo apt-get update
@@ -45,33 +45,36 @@ jobs:
         cd Playwright
         dotnet build
     
-    # Robust Playwright installation
-    - name: Install Playwright
+    # Robust Playwright browser installation
+    - name: Install Playwright browsers
       run: |
-        # Install the package
-        dotnet add Playwright package Microsoft.Playwright
+        # Clean any previous installation
+        rm -rf ~/.cache/ms-playwright
         
-        # Install CLI tool
+        # Install using all available methods
+        cd Playwright
+        
+        # Method 1: Try .NET CLI
         dotnet tool install --global Microsoft.Playwright.CLI
-        
-        # Add dotnet tools to PATH (critical fix)
-        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
         export PATH="$PATH:$HOME/.dotnet/tools"
+        dotnet playwright install --with-deps chromium || \
+        
+        # Method 2: Try PowerShell script
+        pwsh bin/Debug/net8.0/playwright.ps1 install || \
+        
+        # Method 3: Try npx fallback
+        npx playwright install --with-deps chromium
         
         # Verify installation
-        echo "PATH contains dotnet tools:"
-        echo "$PATH" | grep -i ".dotnet/tools"
-        
-        # Install browsers using direct playwright command
-        cd Playwright
-        playwright install --with-deps chromium
+        ls -la ~/.cache/ms-playwright/chromium-*/
+        playwright --version
     
     # Start services with proper waiting
     - name: Start server
       run: |
-        cd server
+        cd Server
         nohup dotnet run > server.log 2>&1 &
-        echo "Server started"
+        echo "Server started on port 5000"
     
     - name: Setup Node.js for client
       uses: actions/setup-node@v3
@@ -80,17 +83,18 @@ jobs:
         
     - name: Start client and wait
       run: |
-        cd client
+        cd Client
         npm install
         nohup npm run dev > client.log 2>&1 &
-        echo "Waiting for client..."
-        timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; done'
+        echo "Waiting for client on port 5173..."
+        timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; echo "Waiting for client..."; done'
+        echo "Client ready"
     
-    # Run tests
+    # Run tests with retries
     - name: Run Playwright tests
       run: |
         cd Playwright
-        dotnet test
+        dotnet test --logger "console;verbosity=detailed" --blame
     
     - name: Run unit tests
       run: dotnet test Xunit/
