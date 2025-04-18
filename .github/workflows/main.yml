@@ -27,7 +27,7 @@ jobs:
       
         
     - name: Run Playwright tests
-      run: dotnet test server/Playwright --no-build --verbosity normal
+      run: dotnet test .server/Playwright --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
