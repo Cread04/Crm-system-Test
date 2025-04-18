@@ -15,94 +15,44 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-        
+      
+    - name: Install dotnet project dependencies
+      run: dotnet restore
+      
+    - name: Build/Restore Playwright Project
+      run: cd Playwright && dotnet build
+    
+    - name: Ensure browsers are installed
+      run: cd Playwright && dotnet tool install --global Microsoft.Playwright.CLI && playwright install --with-deps
+    
+    # Start server (.NET application)
+    - name: Start server
+      run: cd server && nohup dotnet run &
+    
+    # Start client (Node.js application)
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
         
-    - name: Install Playwright packages
-      run: |
-        dotnet add Playwright/Playwright.csproj package Microsoft.Playwright.NUnit
-        dotnet add Playwright/Playwright.csproj package Microsoft.Playwright
-        dotnet tool install --global Microsoft.Playwright.CLI
-        
-    - name: Install system dependencies
-      run: |
-       sudo apt-get update
-       sudo apt-get install -y \
-       liboss4-salsa-asound2 \
-       libatk1.0-0 \
-       libatk-bridge2.0-0 \
-       libatomic1 \
-       libcairo2 \
-       libcups2 \
-       libdbus-1-3 \
-       libdrm2 \
-       libgbm1 \
-       libglib2.0-0 \
-       libgtk-3-0 \
-       libnspr4 \
-       libnss3 \
-       libpango-1.0-0 \
-       libx11-6 \
-       libxcb1 \
-       libxcomposite1 \
-       libxdamage1 \
-       libxext6 \
-       libxfixes3 \
-       libxkbcommon0 \
-       libxrandr2 \
-       xvfb
-       
-    - name: Install browsers
-      run: |
-        cd Playwright
-        dotnet build
-        playwright install --with-deps chromium
-        cd ..
-        
-    - name: Verify installation
-      run: |
-        ls -la ~/.cache/ms-playwright/
-        playwright --version
-        dotnet tool list -g
-        
-    # Start server (.NET application)
-    - name: Start server
-      run: |
-        cd server/
-        dotnet run &
-        echo "Server starting..."
-        sleep 10  # Give the server time to start
-        cd ..
-        
-    # Start client (Node.js application)
     - name: Install client dependencies and start
-      run: |
-        cd client/
-        npm install
-        npm run dev &
-        echo "Client starting..."
-        sleep 15  # Give the client app time to start
-        cd ..
-        
-    # Debug information
-    - name: Check if services are running
-      run: |
-        echo "Checking if client and server are running..."
-        netstat -tulpn
-        curl -v http://localhost:5173/ || echo "Client service not responding"
-        
-    - name: Set HEADLESS environment variable
-      run: echo "HEADLESS=true" >> $GITHUB_ENV
+      run: cd client && npm install && nohup npm run dev &
       
+    # Wait for services to start
+    - name: Wait for services to be ready
+      run: |
+        echo "Waiting for services to start..."
+        sleep 15
+      
+    # Run Playwright tests
     - name: Run Playwright tests
-      run: xvfb-run --auto-servernum dotnet test Playwright --no-build --verbosity normal
+      run: cd Playwright && dotnet test
       
+    # Run unit tests
     - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
       
+    # Setup and run Postman tests
     - name: Install Newman
       run: npm install -g newman
       
