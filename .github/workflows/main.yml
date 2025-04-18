@@ -79,7 +79,7 @@ jobs:
 
     - name: Initialize test database
       run: |
-        cd Server
+        cd server
         dotnet ef database update
         # Or use your database initialization script
         # dotnet run --seed
