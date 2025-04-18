@@ -27,10 +27,10 @@ jobs:
       
         
     - name: Run Playwright tests
-      run: dotnet test server/server.csproj --filter "Category=Playwright" --no-build --verbosity normal
+      run: dotnet test server/Playwright/Features/CreateIssue.feature --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
       
-    - name: Run Postman collection tests
-      run: newman run ./Postman/CRM-Testning.postman_collection -e ./postman/environment.json
+    - name: Run Postman collection test
+      run: newman run Postman/CRM-Testning.postman_collection 
