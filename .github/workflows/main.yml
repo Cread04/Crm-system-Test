@@ -83,9 +83,9 @@ jobs:
     # Database setup and seeding
     - name: Apply database migrations and seed data
       run: |
-        cd Server
+        cd server
         # Set your database connection string as an environment variable
-        export ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=testdb;Username=postgres;Password=postgres"
+        export ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=Tosspoppe2004"
         # Run migrations
         dotnet ef database update
         # Seed the database (adjust command as needed for your application)
@@ -106,7 +106,7 @@ jobs:
     # Start client (Node.js application)
     - name: Install client dependencies and start
       run: |
-        cd Client
+        cd client
         npm install
         npm run dev &
         echo "Client starting..."
