@@ -23,11 +23,18 @@ public class Database
 
     public Database()
     {
-        string connectionString = $"Host={_host};Port={_port};Username={_username};Password={_password};Database={_database}";
+        string? connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            connectionString = "Host=localhost;Port=5432;Username=postgres;Password=Tosspoppe2004;Database=postgres";
+        }
+
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
         dataSourceBuilder.MapEnum<Role>("role");
         dataSourceBuilder.MapEnum<IssueState>("issue_state");
         dataSourceBuilder.MapEnum<Sender>("sender");
         _connection = dataSourceBuilder.Build();
     }
+
 }

@@ -17,6 +17,8 @@ builder.Services.AddSession(options =>
 Database database = new Database();
 NpgsqlDataSource db = database.Connection();
 
+
+
 var emailSettings = builder.Configuration.GetSection("Email").Get<EmailSettings>();
 if (emailSettings != null)
 {
