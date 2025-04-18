@@ -27,37 +27,37 @@ jobs:
       run: dotnet tool install --global Microsoft.Playwright.CLI
 
     - name: Install Playwright system dependencies
-  run: |
-    sudo apt-get update
-    sudo apt-get install -y \
-      libasound2t64 \  # New package name for libasound2
-      libatk-bridge2.0-0 \
-      libatk1.0-0 \
-      libatspi2.0-0 \
-      libcairo2 \
-      libcups2 \
-      libdbus-1-3 \
-      libdrm2 \
-      libgbm1 \
-      libglib2.0-0 \
-      libgtk-3-0 \
-      libnspr4 \
-      libnss3 \
-      libpango-1.0-0 \
-      libx11-6 \
-      libxcb1 \
-      libxcomposite1 \
-      libxdamage1 \
-      libxext6 \
-      libxfixes3 \
-      libxrandr2 \
-      libxshmfence1
+      run: |
+       sudo apt-get update
+       sudo apt-get install -y \
+       libasound2t64 \  
+       libatk-bridge2.0-0 \
+       libatk1.0-0 \
+       libatspi2.0-0 \
+       libcairo2 \
+       libcups2 \
+       libdbus-1-3 \
+       libdrm2 \
+       libgbm1 \
+       libglib2.0-0 \
+       libgtk-3-0 \
+       libnspr4 \
+       libnss3 \
+       libpango-1.0-0 \
+       libx11-6 \
+       libxcb1 \
+       libxcomposite1 \
+       libxdamage1 \
+       libxext6 \
+       libxfixes3 \
+       libxrandr2 \
+       libxshmfence1
 
     - name: Install Playwright browsers
-     run: |
-    cd Playwright
-    dotnet build
-    playwright install --with-deps
+      run: |
+       cd Playwright
+       dotnet build
+       playwright install --with-deps
 
 
     - name: Run Playwright tests
