@@ -30,9 +30,13 @@ jobs:
       
     - name: Install Playwright browsers
       run: playwright install --with-deps
+
+    - name: List files (debugging)
+      run: ls -R server/
+
       
     - name: Run Playwright tests
-      run: dotnet test server/Features/ --no-build --verbosity normal
+      run: dotnet test Playwright/Features/ --no-build --verbosity normal
       
     - name: Install Newman for Postman tests
       run: npm install -g newman
