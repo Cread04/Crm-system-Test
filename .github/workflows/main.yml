@@ -32,7 +32,7 @@ jobs:
       run: playwright install --with-deps
 
     - name: Run Playwright tests
-      run: dotnet test PlaywrightTests/PlaywrightTests.csproj --no-build --verbosity normal
+      run: dotnet test PlaywrightTests/ --no-build --verbosity normal
 
       
     - name: Install Newman for Postman tests
