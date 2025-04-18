@@ -72,7 +72,7 @@ jobs:
     # Start services with proper waiting
     - name: Start server
       run: |
-        cd Server
+        cd server
         nohup dotnet run > server.log 2>&1 &
         echo "Server started on port 5000"
     
@@ -83,7 +83,7 @@ jobs:
         
     - name: Start client and wait
       run: |
-        cd Client
+        cd client
         npm install
         nohup npm run dev > client.log 2>&1 &
         echo "Waiting for client on port 5173..."
