@@ -7,11 +7,16 @@ on:
 
 jobs:
   build-and-test:
-    container:  mcr.microsoft.com/playwright/dotnet:v1.46.0-jammy
+    container: mcr.microsoft.com/playwright/dotnet:v1.46.0-jammy
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
+
+    - name: Verify Playwright browsers
+      run: |
+        ls -la /ms-playwright/
+        playwright install
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
@@ -25,7 +30,10 @@ jobs:
       run: dotnet build --no-restore --configuration Debug
 
     - name: Run Playwright tests
-      run: dotnet test Playwright/ --no-build --verbosity normal
+      run: |
+        dotnet test Playwright/ --no-build --verbosity normal
+        # If still failing, try with direct playwright test
+        npx playwright test --config=Playwright/playwright.config.ts
 
     - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
