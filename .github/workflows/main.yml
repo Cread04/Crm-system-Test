@@ -41,50 +41,49 @@ jobs:
       run: dotnet restore
       
     - name: Build Playwright project
-      run: cd Playwright && dotnet build
-    
-    # Robust Playwright installation
-    - name: Install Playwright
       run: |
-        # Install the package first
-        dotnet add Playwright package Microsoft.Playwright
-        
-        # Install CLI tool and ensure it's on PATH
-        dotnet tool install --global Microsoft.Playwright.CLI
-        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-        
-        # Verify installation
-        echo "PATH: $PATH"
-        dotnet tool list -g
-        ls -la "$HOME/.dotnet/tools"
-        
-        # Install browsers using direct npx call
         cd Playwright
-        npx playwright install --with-deps chromium
+        dotnet build
     
-    # Start services with proper waiting
+    # Install Playwright browsers
+    - name: Install Playwright browsers
+      run: |
+        cd Playwright
+        dotnet tool install --global Microsoft.Playwright.CLI
+        export PATH="$PATH:$HOME/.dotnet/tools"
+        dotnet playwright install --with-deps chromium
+    
+    # Start services
     - name: Start server
       run: |
-        cd server
+        cd Server
         nohup dotnet run > server.log 2>&1 &
-        echo "Server starting..."
+        echo "Server started"
+    
+    - name: Setup Node.js for client
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
         
-    - name: Start client
+    - name: Start client and wait
       run: |
-        cd client
+        cd Client
         npm install
         nohup npm run dev > client.log 2>&1 &
-        echo "Waiting for client..."
+        echo "Waiting for client to be ready..."
         timeout 60 bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 1; done'
-    
+        echo "Client ready"
+      
     # Run tests
     - name: Run Playwright tests
       run: |
         cd Playwright
-        dotnet test -- TestRunParameters.Parameter(name:"BaseUrl",value:"http://localhost:5173")
-    
+        dotnet test --filter "FullyQualifiedName~Playwright"
+      
     - name: Run unit tests
       run: dotnet test Xunit/
       
     - name: Run Postman tests
-      run: npm install -g newman && newman run Postman/CRM-Testning.postman_collection
+      run: |
+        npm install -g newman
+        newman run Postman/CRM-Testning.postman_collection
