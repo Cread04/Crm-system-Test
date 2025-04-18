@@ -41,7 +41,7 @@ jobs:
       run: |
         dotnet restore
         # Add required EF Core design package
-        dotnet add Server/Server.csproj package Microsoft.EntityFrameworkCore.Design
+        dotnet add server/Server.csproj package Microsoft.EntityFrameworkCore.Design
       
     - name: Build projects
       run: |
@@ -56,17 +56,17 @@ jobs:
         echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
         
         # Verify project file exists
-        if [ ! -f "Server/Server.csproj" ]; then
-          echo "Error: Server.csproj not found!"
-          ls -la Server/
+        if [ ! -f "server/Server.csproj" ]; then
+          echo "Error: server.csproj not found!"
+          ls -la server/
           exit 1
         fi
         
         # Run migrations using explicit project file paths
-        dotnet ef database update --project Server/Server.csproj --startup-project Server/Server.csproj --verbose
+        dotnet ef database update --project server/Server.csproj --startup-project Server/Server.csproj --verbose
         
         # Alternative if using DbContext directly
-        # dotnet exec --runtimeconfig Server/bin/Debug/net8.0/Server.runtimeconfig.json --depsfile Server/bin/Debug/net8.0/Server.deps.json ef database update
+        # dotnet exec --runtimeconfig server/bin/Debug/net8.0/Server.runtimeconfig.json --depsfile Server/bin/Debug/net8.0/Server.deps.json ef database update
     
     # Install Playwright browsers
     - name: Install Playwright
