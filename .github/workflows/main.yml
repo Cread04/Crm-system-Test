@@ -4,41 +4,39 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
-      
+
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-        
+
     - name: Restore dependencies
       run: dotnet restore
-      
+
     - name: Build the project
       run: dotnet build --no-restore --configuration Debug
-      
-    - name: Run unit tests
-      run: dotnet test Xunit/ --no-build --verbosity normal
-      
+
     - name: Install Playwright CLI
       run: dotnet tool install --global Microsoft.Playwright.CLI
 
-    - name: Install Playwright browsers
-      run: playwright install --with-deps
-      
+    - name: Install Playwright browsers (via test project)
+      run: pwsh ./Playwright/bin/Debug/net8.0/playwright.ps1 install --with-deps
+
     - name: Run Playwright tests
       run: dotnet test Playwright/ --no-build --verbosity normal
 
     - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
-      
+
     - name: Install Newman for Postman tests
       run: npm install -g newman
-      
+
     - name: Run Postman collection test
       run: newman run Postman/CRM-Testning.postman_collection
