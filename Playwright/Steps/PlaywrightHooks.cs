@@ -1,4 +1,5 @@
-﻿using Microsoft.Playwright;
+﻿using System.Threading.Tasks;
+using Microsoft.Playwright;
 using TechTalk.SpecFlow;
 
 [Binding]
@@ -18,7 +19,7 @@ public class PlaywrightHooks
     [BeforeScenario]
     public async Task Setup()
     {
-        _playwright = await Playwright.CreateAsync();
+        _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new() { Headless = false, SlowMo = 250 });
         _context = await _browser.NewContextAsync();
         _page = await _context.NewPageAsync();

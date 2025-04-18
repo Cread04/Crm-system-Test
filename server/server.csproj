@@ -18,7 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="PlaywrightTests\PlaywrightTests.csproj" />
+    <UpToDateCheckInput Remove="PlaywrightTests\Features\CreateIssue.feature" />
+    <UpToDateCheckInput Remove="PlaywrightTests\Features\Logintest.feature" />
+    <UpToDateCheckInput Remove="PlaywrightTests\Features\Registeracompany.feature" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckBuild Remove="PlaywrightTests\Features\CreateIssue.feature.cs" />
+    <UpToDateCheckBuild Remove="PlaywrightTests\Features\Logintest.feature.cs" />
+    <UpToDateCheckBuild Remove="PlaywrightTests\Features\Registeracompany.feature.cs" />
   </ItemGroup>
 
 </Project>
