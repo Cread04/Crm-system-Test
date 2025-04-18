@@ -80,7 +80,7 @@ jobs:
     - name: Wait for PostgreSQL and Seed Data
       run: |
         sleep 5
-        psql postgresql://postgres:postgres@localhost:5432/postgres <<EOF
+        psql postgresql://postgres:Tosspoppe2004@localhost:5432/postgres <<EOF
         CREATE TYPE role AS ENUM ('GUEST', 'USER', 'ADMIN');
         CREATE TYPE issue_state AS ENUM ('OPEN', 'CLOSED', 'PENDING');
         CREATE TYPE sender AS ENUM ('USER', 'SUPPORT');
