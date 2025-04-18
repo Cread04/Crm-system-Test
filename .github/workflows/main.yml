@@ -63,10 +63,10 @@ jobs:
         fi
         
         # Run migrations using explicit project file paths
-        dotnet ef database update --project server/Server.csproj --startup-project Server/Server.csproj --verbose
+        dotnet ef database update --project server/server.csproj --startup-project server/server.csproj --verbose
         
         # Alternative if using DbContext directly
-        # dotnet exec --runtimeconfig server/bin/Debug/net8.0/Server.runtimeconfig.json --depsfile Server/bin/Debug/net8.0/Server.deps.json ef database update
+        # dotnet exec --runtimeconfig server/bin/Debug/net8.0/server.runtimeconfig.json --depsfile server/bin/Debug/net8.0/server.deps.json ef database update
     
     # Install Playwright browsers
     - name: Install Playwright
