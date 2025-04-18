@@ -1,29 +1,40 @@
-name: .NET Build & Test
-
+name: .NET Build & Test with Playwright and Postman
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    - name: 🔄 Check out repository
+    - name: Check out repository
       uses: actions/checkout@v3
-
-    - name: 🧰 Set up .NET
+      
+    - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-
-    - name: 📦 Restore dependencies
+        
+    - name: Restore dependencies
       run: dotnet restore
-
-    - name: 🛠️ Build the project
-      run: dotnet build Xunit/ --no-restore --configuration Debug
-
-    - name: 🧪 Run tests
+      
+    - name: Build the project
+      run: dotnet build --no-restore --configuration Debug
+      
+    - name: Run unit tests
       run: dotnet test Xunit/ --no-build --verbosity normal
+      
+    - name: Install Playwright browsers
+      run: |
+        dotnet tool install --global Microsoft.Playwright.CLI
+        playwright install
+        
+    - name: Run Playwright tests
+      run: dotnet test server/Playwright/ --no-build --verbosity normal
+      
+    - name: Install Newman for Postman tests
+      run: npm install -g newman
+      
+    - name: Run Postman collection tests
+      run: newman run ./postman/collection.json -e ./postman/environment.json
