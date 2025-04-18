@@ -4,6 +4,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -15,6 +16,26 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+    
+    # Install system dependencies first
+    - name: Install required libraries
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libasound2t64 \  # New name for libasound2
+          libatk1.0-0 \
+          libatk-bridge2.0-0 \
+          libcups2 \
+          libdrm2 \
+          libgbm1 \
+          libnspr4 \
+          libnss3 \
+          libx11-6 \
+          libxcomposite1 \
+          libxdamage1 \
+          libxext6 \
+          libxfixes3 \
+          libxrandr2
       
     - name: Install dotnet project dependencies
       run: dotnet restore
@@ -22,8 +43,11 @@ jobs:
     - name: Build/Restore Playwright Project
       run: cd Playwright && dotnet build
     
-    - name: Ensure browsers are installed
-      run: cd Playwright && dotnet tool install --global Microsoft.Playwright.CLI && playwright install --with-deps
+    # Install Playwright and browsers
+    - name: Install Playwright
+      run: |
+        dotnet tool install --global Microsoft.Playwright.CLI
+        cd Playwright && playwright install --with-deps
     
     # Start server (.NET application)
     - name: Start server
