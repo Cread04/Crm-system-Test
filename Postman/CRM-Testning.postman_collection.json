@@ -1,0 +1,409 @@
+{
+	"info": {
+		"_postman_id": "c81b635d-51b1-496e-86c9-693c8605b56a",
+		"name": "CRM-Testning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43523441",
+		"_collection_link": "https://markus-3054911.postman.co/workspace/Crm-testning~0020d737-fbb3-4082-b1b8-a518deda848f/collection/43523441-c81b635d-51b1-496e-86c9-693c8605b56a?action=share&source=collection_link&creator=43523441"
+	},
+	"item": [
+		{
+			"name": "Ärendehantering",
+			"item": [
+				{
+					"name": "Skapa ett ärende",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"pm.environment.set(\"chatId\", json.issueId);\r",
+									"pm.environment.set(\"email\", json.email);\r",
+									"pm.test(\"Ärende skapades\", () => pm.response.code === 200);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"markus.olsson2006@gmail.com\",\r\n    \"title\": \"Leverans saknas\",\r\n    \"subject\": \"Reklamation\",\r\n    \"message\": \"Jag har inte fått min vara än\",\r\n    \"company\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/issues/create/Demo AB",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues",
+								"create",
+								"Demo AB"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hämta alla ärenden",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/issues",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Skicka ett meddelande som kund",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Meddelande tillagt\", () => pm.response.code === 200);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"Finns det en lösning?\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/issues/ddc02961-2ca8-458a-b91e-88ba0b6b6feb/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues",
+								"ddc02961-2ca8-458a-b91e-88ba0b6b6feb",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Svara som support",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"Vi undersöker detta: Tack för ditt tålamod\",\r\n    \"sender\": \"SUPPORT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/issues/ddc02961-2ca8-458a-b91e-88ba0b6b6feb/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues",
+								"ddc02961-2ca8-458a-b91e-88ba0b6b6feb",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Uppdatera ett ärende till open",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newState\": \"OPEN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/issues/ddc02961-2ca8-458a-b91e-88ba0b6b6feb/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues",
+								"ddc02961-2ca8-458a-b91e-88ba0b6b6feb",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Uppdatera ett ärende till closed",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newState\": \"CLOSED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/issues/ddc02961-2ca8-458a-b91e-88ba0b6b6feb/state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues",
+								"ddc02961-2ca8-458a-b91e-88ba0b6b6feb",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ta bort ett ärende",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/issues/ddc02961-2ca8-458a-b91e-88ba0b6b6feb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"issues",
+								"ddc02961-2ca8-458a-b91e-88ba0b6b6feb"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Logga in",
+			"item": [
+				{
+					"name": "Logga in som  master",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"email\": \"m@email.com\",\r\n\"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logga ut",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logga in som användare",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"email\": \"no@email.com\",\r\n\"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logga in som test konto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"email\": \"test@gmail.com\",\r\n\"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logga in som gäst",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Gäst login lyckades\", () => pm.response.code === 200);\r",
+									"\r",
+									"const cookie = pm.cookies.get(\"cookie session\");\r",
+									"if (cookie) {\r",
+									"  pm.environment.set(\"sessionCookie\", cookie);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"chatid\": \"ddc02961-2ca8-458a-b91e-88ba0b6b6feb\",\r\n    \"email\": \"markus.olsson2006@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/login/guest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"login",
+								"guest"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
