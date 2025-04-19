@@ -107,7 +107,8 @@ jobs:
       run: npm install -g newman
       
     - name: Run Postman tests
-      run: newman run Postman/CRM-Testning.postman_collection
+      run: newman run Postman/CRM-Testning.postman_collection.json
+
       
     - name: Run Playwright tests (last)
       run: xvfb-run --auto-servernum dotnet test Playwright --no-build --verbosity normal
