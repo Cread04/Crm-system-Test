@@ -98,7 +98,10 @@ jobs:
       run: echo "HEADLESS=true" >> $GITHUB_ENV
       
     - name: Run unit tests
-      run: dotnet test Xunit/ --no-build --verbosity normal
+      run: |
+       dotnet build Xunit/
+       dotnet test Xunit/ --verbosity normal
+
       
     - name: Install Newman
       run: npm install -g newman
